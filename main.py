@@ -20,8 +20,22 @@ def about(station,date):
     return {"station": station,
             "date": date,
             "temperature": temp}
+@app.route("/api/v1/<station>") #connects that tag to function
+def alldata(station):
+    filename = "data_small/TG_STAID" + str(station).zfill(6) + ".txt"
+    df = pd.read_csv(filename, skiprows=20, parse_dates=["    DATE"])
+    res = df.to_dict(orient = "records")
+    return (res)
 
 
+@app.route("/api/v1/yearly/<station>/<year>") #connects that tag to function
+def yearly(station, year):
+    filename = "data_small/TG_STAID" + str(station).zfill(6) + ".txt"
+    df = pd.read_csv(filename, skiprows=20)
+    df["    DATE"] = df["    DATE"].astype(str)
+    res = df[df["    DATE"].str.startswith(str(year))]
+
+    return (res.to_dict(orient="records"))
 
 if __name__ == "__main__": # website run only if main is executed directly and not imported
     app.run(debug=True)
