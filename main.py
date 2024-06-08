@@ -3,10 +3,11 @@ import pandas as pd
 
 app = Flask(__name__)
 
-
+d = pd.read_csv("data_small/stations.txt", skiprows=17)
+v = d[["STAID" , "STANAME                                 "]]
 @app.route("/") #connects that tag to function
 def home():
-    return render_template("home.html")
+    return render_template("home.html", data = v.to_html())
 
 
 @app.route("/api/v1/<station>/<date>") #connects that tag to function
